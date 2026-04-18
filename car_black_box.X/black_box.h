@@ -1,5 +1,9 @@
 #include <xc.h>
 
+#ifndef BB_H
+#define BB_H
+
+
 /* Enum for maintaining the app state */
 typedef enum {
     e_dashboard, e_main_menu, e_view_log, e_set_time, e_download_log, e_clear_log
@@ -40,3 +44,4 @@ void download_log(void);
 //Clear log function declaration
 void clear_log(void);
 
+#endif // !BB_H
