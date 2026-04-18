@@ -30,6 +30,18 @@
 #define LINE2(x) (0xC0 + (x)) // position on row 2 column x
 
 
+/*
+ * NOTE: TWO_LINE_5x8_MATRIX_8_BIT
+ * 0x38 in bits
+ * Bit:   7   6   5   4   3   2   1   0
+          0   0   1   1   1   0   0   0
+               ↑   ↑   ↑
+               |   |   |
+               |   |   └── F  = 0 → 5x8 dot font
+               |   └────── N  = 1 → 2 line display
+               └────────── DL = 1 → 8-bit data mode
+ */
+
 #define TWO_LINE_5x8_MATRIX_8_BIT clcd_write(0x38, INSTRUCTION_COMMAND)
 #define CLEAR_DISP_SCREEN clcd_write(0x01, INSTRUCTION_COMMAND)
 #define CURSOR_HOME	clcd_write(0x02, INSTRUCTION_COMMAND)
