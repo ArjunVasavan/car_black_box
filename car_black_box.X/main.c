@@ -1,10 +1,11 @@
 #include "black_box.h"
+#include "clcd.h"
 
 State_t state;
 
 void init_config() {
-
     state = e_dashboard;
+    init_clcd();
 }
 
 int main(void) {

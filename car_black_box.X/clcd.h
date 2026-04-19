@@ -6,7 +6,7 @@
 #define CLCD_RS RC1
 #define CLCD_RW RC0
 #define CLCD_BUSY RD7
-#define PORT_DIR TRISF7
+#define PORT_DIR TRISD
 
 #define HI 1
 #define LO 0

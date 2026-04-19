@@ -14,10 +14,8 @@ void clcd_write(unsigned char bit_values, unsigned char control_bit) {
     CLCD_RS = INSTRUCTION_COMMAND;
 
     do {
-
         CLCD_EN = HI;
         CLCD_EN = LO;
-
     } while (CLCD_BUSY);
 
     CLCD_RW = LO;
@@ -42,8 +40,6 @@ void init_clcd() {
     __delay_us(100);
     clcd_write(EIGHT_BIT_MODE, INSTRUCTION_COMMAND	);
     __delay_us(1);
-
-
     CURSOR_HOME;
     __delay_us(100);
     TWO_LINE_5x8_MATRIX_8_BIT;
@@ -61,9 +57,7 @@ void clcd_print(const unsigned char *data, unsigned char addr) {
 	}
 }
 
-
-void clcd_putch(const unsigned char data, unsigned char addr){
+void clcd_putch(const unsigned char data, unsigned char addr) {
 	clcd_write(addr, INSTRUCTION_COMMAND);
 	clcd_write(data, DATA_COMMAND);
 }
-
