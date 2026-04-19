@@ -1,10 +1,22 @@
 #include <xc.h>
-#include "timer0.h"
+#include "timer.h"
 
 /* NOTE: TIMER0
  * Its an Hardware counter inside the PIC 
  * it counts up automatically and when it overflows it triggers an interrupt
  */
+
+
+unsigned long int timer_count = 0;
+
+void __interrupt() isr() {
+    if ( TMR0IF ) {
+        TMR0 = TMR0 + 9; // when interrupt happens and isr runs at that time timer 
+                         // will count approx 9 ticks for componsating that were using + 9
+        if (timer_count++ == 20000) timer_count = 0;
+        TMR0IF = 0;
+    }
+}
 
 void init_timer0(void) {
     T08BIT = 1; // Set to 8 bit mode i.e. count from 0 to 255 the overflow

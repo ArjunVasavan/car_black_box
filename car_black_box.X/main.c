@@ -1,11 +1,12 @@
 #include "black_box.h"
 #include "clcd.h"
-
+#include "timer.h"
 State_t state;
 
 void init_config() {
     state = e_dashboard;
     init_clcd();
+    init_timer0();
 }
 
 int main(void) {
