@@ -14,6 +14,12 @@
 #define INPUT 0xFF
 #define OUTPUT 0x00
 
+/*
+ * NOTE: control_bit
+ * 0 --> INSTRUCTION_COMMAND
+ * 1 --> DATA_COMMAND
+ */
+
 #define DATA_COMMAND 1
 #define INSTRUCTION_COMMAND	0
 
@@ -52,6 +58,11 @@
 void init_clcd(void);
 void clcd_print(const unsigned char *data, unsigned char addr);
 void clcd_putch(const unsigned char data, unsigned char addr);
+
+/*
+ * bit_values : byte we want to send
+ * 0x01 -> clear screen or 'A' for showing letter A
+ */
 void clcd_write(unsigned char bit_values, unsigned char control_bit);
 
 #endif // !CLCD_H
