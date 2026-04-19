@@ -2,19 +2,19 @@
 #include "clcd.h"
 #include "timer.h"
 
-unsigned char line1[17] = " TIME    EV  SP ";
-unsigned char time[9]   = "00:00:00";
-unsigned char event[3]  = "00";
-unsigned char speed[3]  = "00";
+static unsigned char line1[17] = " TIME    EV  SP ";
+static unsigned char time[9]   = "00:00:00";
+static unsigned char event[3]  = "00";
+static unsigned char speed[3]  = "00";
+static unsigned char seconds = 0;
+static unsigned char minutes = 0;
+static unsigned char hours = 0;
 
 void display_labels() {
     clcd_print(line1,LINE1(0));
 }
 
 
-unsigned char seconds = 0;
-unsigned char minutes = 0;
-unsigned char hours = 0;
 
 void update_time() {
     if ( timer_count == 0 ) { // this means timer_count just reset i.e. 1 seconds
@@ -51,24 +51,3 @@ void view_dashboard() {
     clcd_print(speed,  LINE2(13));  // col 13 → under SP
 }
 
-
-
-void display_main_menu(void) {
-
-}
-
-void view_log(void) {
-
-}
-
-void set_time(void) {
-
-}
-
-void download_log(void) {
-
-}
-
-void clear_log(void) {
-
-}
