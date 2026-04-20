@@ -4,7 +4,7 @@
 
 static unsigned char line1[17] = " TIME    EV  SP ";
 static unsigned char time[9]   = "00:00:00";
-static unsigned char event[3]  = "00";
+static unsigned char event[3]  = "ON";
 static unsigned char speed[3]  = "00";
 static unsigned char seconds = 0;
 static unsigned char minutes = 0;
@@ -13,8 +13,6 @@ static unsigned char hours = 0;
 void display_labels() {
     clcd_print(line1,LINE1(0));
 }
-
-
 
 void update_time() {
     if ( timer_count == 0 ) { // this means timer_count just reset i.e. 1 seconds
