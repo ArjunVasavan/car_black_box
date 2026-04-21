@@ -68,4 +68,27 @@ void init_adc() {
    ADON = 1;
 }
 
+unsigned short read_adc(unsigned char channel) {
+    unsigned short reg_val;
+    /* NOTE: Channel Selection
+     * ADCON0 registers look like this :
+     * Bit:   7    6    5    4    3    2    1    0
+     *        -    -   CH4  CH3  CH2  CH1  GO  ADON
+     * Channel bits are position 2,3,4,5
+     * ADCON0 & 0xC3 -> clears only channel bit and keeps others as 0xC3 = 1100 0011
+     * channel << 2  -> here we are shifiting the value to the channel position
+     */
+    ADCON0 = ( ADCON0 & 0xC3 ) | ( channel << 2 );
+    GO = 1; // start conversion
+    while (GO); // wait till conversion is finished
+    reg_val = ( ADRESH << 8 ) | ADRESL; // storing result
 
+    /* ADRESH = 0000 0011  (upper 2 bits)
+     * ADRESL = 1111 0101  (lower 8 bits)
+     * ADRESH << 8   = 0000 0011 0000 0000  (shift upper bits left by 8)
+     *  ADRESL       = 0000 0000 1111 0101
+     *                ───────────────────── 
+     *  OR result    = 0000 0011 1111 0101  = 1013
+     */
+    return reg_val;
+}
