@@ -16,7 +16,7 @@
 
 void init_ds1307(void);
 void write_ds1307(unsigned char address,  unsigned char data);
-unsigned char read_ds1307(unsigned char address1);
+unsigned char read_ds1307(unsigned char address);
 
 #endif
 

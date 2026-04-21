@@ -73,4 +73,21 @@ void write_ds1307(unsigned char address, unsigned char data) {
      */
 }
 
+unsigned char read_ds1307(unsigned char address) {
+    unsigned char data;
+    i2c_start();
+    i2c_write(SLAVE_WRITE);
+    i2c_write(address);
+    i2c_rep_start();
+    i2c_write(SLAVE_READ);
+    data = i2c_read();
+    i2c_stop();
+    return  data;
 
+    /* [START] → [0xD0 WRITE] → [ADDRESS] → [REP_START] → [0xD1 READ] → [DATA] → [NACK] → [STOP]
+     *    ↑            ↑              ↑            ↑               ↑          ↑
+     *  Begin      "Hey DS1307"   "I want      "Still me,      "Now send   Got it,
+     *  talking     I'll write     register     don't let        the byte"  stop sending
+     *  to you"        0x00"        go of bus"
+     */
+}
