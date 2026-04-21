@@ -143,15 +143,16 @@ void i2c_rx_mode() {
      * RCEN = 1 -> tells hardware it want to receive now
      *          -> hardware starts sampling SDA wire
      *          -> stores received bytes in SSPBUF
-     *          -> sets SSPBUF = 1 when done
+     *          -> sets SSPIF = 1 when done
      */
 	RCEN = 1;
 	i2c_idle();
 }
 
 void i2c_no_ack(){
-	ACKDT = 1; // sends ACK ( wants more data )
-	ACKEN = 1; // sends NACK ( stop sending )
+	ACKDT = 1; // ACKDT = 1 means NACK ( stop sending ) 
+	ACKEN = 1; // trigger sending ACKDT value on bus
+    i2c_idle(); // FIXME: change here if theres an issue
 }
 
 unsigned char i2c_read(){
