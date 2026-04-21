@@ -1,6 +1,7 @@
 #include "black_box.h"
 #include "clcd.h"
 #include "timer.h"
+#include "adc.h"
 
 static unsigned char line1[17] = " TIME    EV  SP ";
 static unsigned char time[9]   = "00:00:00";
