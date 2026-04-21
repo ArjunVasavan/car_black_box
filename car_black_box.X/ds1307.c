@@ -8,11 +8,11 @@
  * DS1307 is an slave on I2C bus
  * DS1307 stores values in BCD format ( Binary Coded Decimal )
  * Normal binary:
-   45 seconds = 0010 1101
-   BCD:
-   45 seconds = 0100 0101
-                ↑↑↑↑ ↑↑↑↑
-                 4    5
+ * 45 seconds = 0010 1101
+ * BCD:
+ * 45 seconds = 0100 0101
+ *              ↑↑↑↑ ↑↑↑↑
+ *               4    5
  */
 
 void init_ds1307() {
@@ -41,7 +41,7 @@ void init_ds1307() {
 
     /* NOTE: CNTL_ADDR ( control register )
      * Bit:  7    6    5    4    3    2    1    0
- i   *      OUT   0   OSF  SQWE  0    0   RS1  RS0
+     i   *      OUT   0   OSF  SQWE  0    0   RS1  RS0
      * 0x93 = 1001 0011
      * OUT = 1  -> Output level high
      * OSF = 0  -> oscillator running
@@ -58,3 +58,19 @@ void init_ds1307() {
     dummy = read_ds1307(SEC_ADDR);
     write_ds1307(SEC_ADDR, dummy & 0x7F );
 }
+
+void write_ds1307(unsigned char address, unsigned char data) {
+    i2c_start(); // taking control of bus
+    i2c_write(SLAVE_WRITE); // writing DS1307 in write mode
+    i2c_write(address); // go to this particular register
+    i2c_write(data); // store value there
+    i2c_stop(); // stopped and releasing bus
+
+    /* START → 0xD0 → ACK → 0x00 → ACK → 0x45 → ACK → STOP
+     *   ↑              ↑            ↑
+     *   DS1307        SEC_ADDR      seconds=45
+     *  write mode
+     */
+}
+
+
