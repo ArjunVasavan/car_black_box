@@ -1,12 +1,23 @@
 #include "black_box.h"
 #include "clcd.h"
 #include "timer.h"
+#include "matrix_keypad.h"
+#include "adc.h"
+#include "i2c.h"
+#include "ds1307.h"
+#include "uart.h"
+
 State_t state;
 
 void init_config() {
     state = e_dashboard;
     init_clcd();
     init_timer0();
+    init_matrix_keypad();
+    init_adc();
+    init_i2c();
+    init_ds1307();
+    init_uart();
 }
 
 int main(void) {
