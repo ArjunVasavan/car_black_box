@@ -4,6 +4,6 @@
 void init_uart();
 void put_char(unsigned char ch);
 void put_str(unsigned char* data);
-unsigned char getch();
+unsigned char get_ch();
 
 #endif // !UART_H

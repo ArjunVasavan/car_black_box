@@ -15,7 +15,7 @@ void init_uart() {
 
     SPEN = 1; // Serial port enable -> turns ON the whole UART module 
     CREN = 1; // Continous receive enable -> keeps receiver always listening
-              // if CREN = 1 -> we have to manually trigger each receive
+              // if CREN = 0 -> we have to manually trigger each receive
     ABDEN = 0; // Auto Baud rate detect is disabled
     WUE = 0; // Wake up enable = disabled, used to wake PIC from sleep on RX activity
     BRG16 = 0; // 0 -> 8 bit Baud rate register ( just SPBRG )
@@ -29,3 +29,20 @@ void init_uart() {
        = 129.2 ≈ 129
        */
 } 
+
+void put_char(unsigned char ch) {
+    while (!TXIF); // checking if buffer is empty or not
+    TXREG = ch; // Updating buffer with character
+}
+
+void put_str(unsigned char *data) {
+    while (*data != '\0') {
+        put_char(*data);
+        data++;
+    }
+}
+
+unsigned char get_ch() {
+    while (!RCIF);
+    return RCREG;
+}
