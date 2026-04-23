@@ -3,6 +3,7 @@
 #include "matrix_keypad.h"
 #include "external_eeprom.h"
 #include "uart.h"
+#include "ds1307.h"
 
 
 void display_main_menu(void) {
@@ -165,6 +166,109 @@ void view_log(void) {
 
 void set_time(void) {
 
+    CLEAR_DISP_SCREEN;
+
+    unsigned char hr = 0, min = 0, sec = 0;
+    unsigned char field = 1, blink_flag = 0;
+    unsigned long int delay = 0;
+
+    clcd_print((const unsigned char*)"HH:MM:SS",LINE1(3));
+
+    while (1) {
+        unsigned char key = read_switches(STATE_CHANGE);
+
+        if ( key == MK_SW1 ) {
+            if ( field == 1  ) {
+                sec+=1;
+                if ( sec == 60 ) {
+                    sec = 0;
+                }
+            } else if ( field == 2 ) {
+                min+=1;
+                if ( min == 60 ) {
+                    min = 0;
+                }
+            } else if ( field == 3 ) {
+                hr+=1;
+                if ( hr == 24 ) {
+                    hr = 0;
+                }
+            }
+        } else if ( key == MK_SW2 ) {
+
+            if ( field == 1  ) {
+                sec-=1;
+                if ( sec == 0 ) {
+                    sec = 59;
+                }
+            } else if ( field == 2 ) {
+                min-=1;
+                if ( min == 0 ) {
+                    min = 59;
+                }
+            } else if ( field == 3 ) {
+                hr-=1;
+                if ( hr == 0 ) {
+                    hr = 23;
+                }
+            }
+
+        } else if ( key == MK_SW4 ) {
+            field+=1;
+            if ( field == 4 ) field = 1;
+
+        } else if (key == MK_SW11 ) { // save time
+
+            CLEAR_DISP_SCREEN;
+
+            unsigned char bcd_hr = ( ( hr / 10 ) << 4 ) | ( hr % 10 );
+            unsigned char bcd_min = ( ( min / 10 ) << 4 ) | ( min % 10 );
+            unsigned char bcd_sec = ( ( sec / 10 ) << 4 ) | ( sec % 10 );
+
+           write_ds1307(HOUR_ADDR, bcd_hr); 
+           write_ds1307(MIN_ADDR,bcd_min); 
+           write_ds1307(SEC_ADDR,bcd_sec); 
+
+           clcd_print((const unsigned char*)"TIME SAVED!", LINE1(3));
+           __delay_ms(2000);
+           break;
+
+        }
+
+        // blinking logic 
+
+        if ( delay++ >= 500 ) {
+            delay = 0;
+            blink_flag = !blink_flag;
+        }
+
+        // displaying time with blinking
+
+        if ( field == 3 && blink_flag ) {
+            clcd_print((const unsigned char*)"  ",LINE2(3));
+        } else {
+            clcd_putch(hr/10 + '0',LINE2(3));
+            clcd_putch(hr%10 + '0',LINE2(4));
+        }
+
+        clcd_putch(':', LINE2(5));
+
+        if ( field == 2 && blink_flag ) {
+            clcd_print((const unsigned char*)"  ",LINE2(6));
+        } else {
+            clcd_putch(min/10 + '0',LINE2(6));
+            clcd_putch(min%10 + '0',LINE2(7));
+        }
+
+        clcd_putch(':', LINE2(8));
+
+        if ( field == 1 && blink_flag  ) {
+            clcd_print((const unsigned char*)"  ",LINE2(9));
+        } else {
+            clcd_putch(sec/10 + '0',LINE2(9));
+            clcd_putch(sec%10 + '0',LINE2(10));
+        }
+    }
 }
 
 void download_log(void) {
@@ -186,7 +290,7 @@ void download_log(void) {
         "01","02","03","04","05",
         "06","07","08","09","10"
     };
-    // starting from oldest log
+    // sting from oldest log
     if ( write_flag == 1 ) {
         read_index = write_index;
     } else {
