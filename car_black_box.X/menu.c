@@ -2,6 +2,7 @@
 #include "clcd.h"
 #include "matrix_keypad.h"
 #include "external_eeprom.h"
+#include "uart.h"
 
 
 void display_main_menu(void) {
@@ -168,6 +169,83 @@ void set_time(void) {
 
 void download_log(void) {
 
+    unsigned char read_index = 0;
+    unsigned char count = 0;
+
+    // no log condition
+    if ( write_flag == 0 && write_index == 0 ) {
+        put_str((unsigned char*)"NO LOGS TO PRINT\n\r");
+        state  = e_main_menu;
+        return;
+    }
+
+    // print header
+    put_str((unsigned char*)"SN  SPD  GEAR  TIME\n\r");
+    //serial numbers
+    const char* serial_no[] = {
+        "01","02","03","04","05",
+        "06","07","08","09","10"
+    };
+    // starting from oldest log
+    if ( write_flag == 1 ) {
+        read_index = write_index;
+    } else {
+        read_index = 0;
+    }
+
+    for ( int i = 0 ; i <= 9 ; i++ ) {
+        // stopping if buffer is not full and reached write_index
+        if ( write_flag == 0 && read_index >= write_index ) break;
+
+        // read log
+
+        unsigned char spd = read_external_eeprom(read_index+SPEED_ADDR);
+        unsigned char gr = read_external_eeprom(read_index+GEAR_ADDR);
+        unsigned char hr = read_external_eeprom(read_index+HOURS_ADDR);
+        unsigned char mn = read_external_eeprom(read_index+MINS_ADDR);
+        unsigned char sc = read_external_eeprom(read_index+SECS_ADDR);
+
+        // converting speed
+        unsigned char spd_str[4];
+        convert_speed_to_string(spd_str, spd);
+
+        // converting time
+        unsigned char time_str[9];
+        time_str[0] = ( hr / 10 ) + '0';
+        time_str[1] = ( hr % 10 ) + '0';
+        time_str[2] = ':';
+        time_str[3] = ( mn / 10 ) + '0';
+        time_str[4] = ( mn % 10 ) + '0';
+        time_str[5] = ':';
+        time_str[6] = ( sc / 10 ) + '0';
+        time_str[7] = ( sc % 10 ) + '0';
+        time_str[8] = '\0';
+
+        // send serial number
+        put_str((unsigned char*)serial_no[count]);
+        put_str((unsigned char *)" ");
+
+        //send speed
+        put_str(spd_str);
+        put_str((unsigned char *)" ");
+
+        // send gear
+        if      ( gr == 0 ) put_char('N');
+        else if ( gr <= 5 ) put_char(gr + '0');
+        else if ( gr == 6 ) put_char('R');
+
+        put_str((unsigned char*)"     ");
+
+        // send time
+        put_str(time_str);
+        put_str((unsigned char*)"\n\r");
+
+        count++;
+        read_index += 5;
+        if ( read_index >= 50 ) read_index = 0;
+    }
+
+    state = e_main_menu;
 }
 
 void clear_log(void) {
