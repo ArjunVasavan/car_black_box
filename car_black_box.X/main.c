@@ -6,6 +6,7 @@
 #include "i2c.h"
 #include "ds1307.h"
 #include "uart.h"
+#include "external_eeprom.h"
 
 State_t state;
 
@@ -31,9 +32,23 @@ void init_config() {
 int main(void) {
     init_config();
 
+    // checking if EEPROM is used before
+
+    if ( read_external_eeprom(INIT_FLAG_ADDR) == INIT_FLAG_VAL ) {
+        // This means EEPROM is saved before so load saved values
+        write_flag = read_external_eeprom(WRITE_FLAG_ADDR);
+        write_index = read_external_eeprom(WRITE_INDEX_ADDR);
+    } else {
+        // starting from zero
+        write_flag = 0;
+        write_index = 0;
+    }
+
+    // now marking EEPROM as used
+    write_external_eeprom(INIT_FLAG_ADDR,INIT_FLAG_VAL);
+
     while(1) {
         // Detect key press
-
         switch (state) {
             case e_dashboard:
                 // Display dashboard
@@ -68,4 +83,3 @@ int main(void) {
     }
 
 }
-
