@@ -9,6 +9,14 @@
 
 State_t state;
 
+unsigned char write_index = 0;
+unsigned char write_flag  = 0;
+unsigned char gear        = 0;
+unsigned char speed_val   = 0;
+unsigned char hours       = 0;
+unsigned char minutes     = 0;
+unsigned char seconds     = 0;
+
 void init_config() {
     state = e_dashboard;
     init_clcd();
