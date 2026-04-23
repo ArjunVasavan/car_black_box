@@ -30,6 +30,8 @@
 #define MK_SW12	12
 #define ALL_RELEASED 0xFF
 
+#define _XTAL_FREQ 20000000
+
 #define HI 1
 #define LO 0
 
