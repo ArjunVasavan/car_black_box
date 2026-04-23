@@ -198,17 +198,17 @@ void set_time(void) {
 
             if ( field == 1  ) {
                 sec-=1;
-                if ( sec == 0 ) {
+                if ( sec == 255 ) {
                     sec = 59;
                 }
             } else if ( field == 2 ) {
                 min-=1;
-                if ( min == 0 ) {
+                if ( min == 255 ) {
                     min = 59;
                 }
             } else if ( field == 3 ) {
                 hr-=1;
-                if ( hr == 0 ) {
+                if ( hr == 255 ) {
                     hr = 23;
                 }
             }
@@ -269,6 +269,8 @@ void set_time(void) {
             clcd_putch(sec%10 + '0',LINE2(10));
         }
     }
+
+    state = e_main_menu;
 }
 
 void download_log(void) {
