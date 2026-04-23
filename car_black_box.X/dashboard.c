@@ -1,24 +1,38 @@
 #include "black_box.h"
 #include "clcd.h"
-#include "timer.h"
 #include "adc.h"
-#include "uart.h"
 #include "matrix_keypad.h"
 #include "ds1307.h"
 #include "external_eeprom.h"
-#include "i2c.h"
 
+
+static const char* gear_display[] = {"N","1","2","3","4","5","R"};
 
 static unsigned char line1[17] = " TIME    EV  SP ";
 static unsigned char time[9]   = "00:00:00";
 static unsigned char event[3]  = "ON";
 static unsigned char speed[4]  = "00";
-static unsigned char seconds = 0;
-static unsigned char minutes = 0;
-static unsigned char hours = 0;
 
 void display_labels() {
     clcd_print(line1,LINE1(0));
+}
+
+void save_log() {
+    write_external_eeprom(SPEED_ADDR+write_index,speed_val);
+    write_external_eeprom(GEAR_ADDR+write_index, gear);
+    write_external_eeprom(HOURS_ADDR+write_index,hours);
+    write_external_eeprom(MINS_ADDR+write_index,minutes);
+    write_external_eeprom(SECS_ADDR+write_index,seconds);
+
+    write_index+=5;
+
+    if ( write_index >= 50 ) {
+        write_index = 0;
+        write_flag = 1;
+        write_external_eeprom(WRITE_FLAG_ADDR,write_flag);
+    }
+
+    write_external_eeprom(WRITE_INDEX_ADDR,write_index);
 }
 
 
@@ -55,6 +69,8 @@ void read_speed_adc() {
     speed[1] = ( spd / 10 )  % 10 + '0';
     speed[2] = ( spd )       % 10 + '0';
     speed[3] = '\0';
+
+    speed_val = adc_val / 10.23;
 }
 
 
@@ -88,7 +104,7 @@ void view_dashboard() {
     update_time();
     display_labels();
     clcd_print(time,   LINE2(0));   // col 0  → 00:00:00
-    clcd_print(event,  LINE2(9));   // col 9  → under EV
+    clcd_print((const unsigned char*)gear_display[gear],LINE2(9));
     clcd_print(speed,  LINE2(13));  // col 13 → under SP
     unsigned char key = read_switches(STATE_CHANGE);
     if ( key == MK_SW11 ) {
