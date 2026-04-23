@@ -8,5 +8,6 @@
 
 void write_external_eeprom(unsigned char address, unsigned char data);
 unsigned char read_external_eeprom(unsigned char address);
+void save_log();
 
 #endif // !EEPROM_H

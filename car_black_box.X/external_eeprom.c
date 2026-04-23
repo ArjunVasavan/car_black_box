@@ -1,5 +1,7 @@
 #include <xc.h>
 #include "external_eeprom.h"
+#include "black_box.h"
+#include "ds1307.h"
 #include "i2c.h"
 
 /* NOTE: External EEPROM
@@ -10,6 +12,23 @@
  * Its an Slave of I2C bus
  */
 
+void save_log() {
+    write_external_eeprom(SPEED_ADDR+write_index,speed_val);
+    write_external_eeprom(GEAR_ADDR+write_index, gear);
+    write_external_eeprom(HOURS_ADDR+write_index,hours);
+    write_external_eeprom(MINS_ADDR+write_index,minutes);
+    write_external_eeprom(SECS_ADDR+write_index,seconds);
+
+    write_index+=5;
+
+    if ( write_index >= 50 ) {
+        write_index = 0;
+        write_flag = 1;
+        write_external_eeprom(WRITE_FLAG_ADDR,write_flag);
+    }
+
+    write_external_eeprom(WRITE_INDEX_ADDR,write_index);
+}
 
 void write_external_eeprom(unsigned char address, unsigned char data) {
     i2c_start();

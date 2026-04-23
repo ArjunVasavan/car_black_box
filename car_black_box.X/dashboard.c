@@ -81,6 +81,9 @@ void view_dashboard() {
     unsigned char key = read_switches(STATE_CHANGE);
     if ( key == MK_SW11 ) {
         state = e_main_menu;
+    } else if ( key == MK_SW1 && gear < 6 ) {
+        gear+=1;
+        save_log();
     }
 }
 
