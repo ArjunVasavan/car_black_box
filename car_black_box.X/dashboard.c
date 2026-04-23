@@ -61,15 +61,17 @@ void read_real_time_clock() {
     hours = ( ( ( ( raw_hr >> 4 ) & 0x01 ) * 10 ) + ( raw_hr & 0x0F) );
 }
 
-void read_speed_adc() {
-    unsigned short adc_val = read_adc(CHANNEL4); // CHANNEL4 is potentiometer
-    unsigned char spd = adc_val/ 10.23; // scale 0 - 1023 to 0 - 100
-
+void convert_speed_to_string(unsigned char* speed, unsigned char spd ) {
     speed[0] = ( spd / 100 ) % 10 + '0';
     speed[1] = ( spd / 10 )  % 10 + '0';
     speed[2] = ( spd )       % 10 + '0';
     speed[3] = '\0';
+}
 
+void read_speed_adc() {
+    unsigned short adc_val = read_adc(CHANNEL4); // CHANNEL4 is potentiometer
+    unsigned char spd = adc_val/ 10.23; // scale 0 - 1023 to 0 - 100
+    convert_speed_to_string(speed,spd);
     speed_val = adc_val / 10.23;
 }
 
@@ -83,6 +85,7 @@ void update_time() {
         time[5] = ':';
         time[6] = ( seconds / 10 ) + '0';
         time[7] = ( seconds % 10 ) + '0';
+        time[8] = '\0';
 }
 
 void show_collision() {
@@ -108,6 +111,7 @@ void view_dashboard() {
     clcd_print(speed,  LINE2(13));  // col 13 → under SP
     unsigned char key = read_switches(STATE_CHANGE);
     if ( key == MK_SW11 ) {
+        CLEAR_DISP_SCREEN;
         state = e_main_menu;
     } else if ( key == MK_SW1 && gear < 6 ) {
         gear+=1;

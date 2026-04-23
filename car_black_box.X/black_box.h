@@ -56,6 +56,9 @@ extern State_t state; // App state
 
 //Function declarations
 
+
+void convert_speed_to_string(unsigned char* speed, unsigned char spd );
+
 //Dashboard function declaration
 void view_dashboard(void);
 
