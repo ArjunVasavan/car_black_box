@@ -93,9 +93,9 @@ void view_log(void) {
             if ( log_count < 9 ) {
                 read_index+=5;
                 log_count+=1;
-            }
-            if ( read_index >= 50 ) {
-                read_index = 0;
+                if ( read_index >= 50 ) {
+                    read_index = 0;
+                }
             }
         }
 
@@ -171,6 +171,21 @@ void download_log(void) {
 }
 
 void clear_log(void) {
+    CLEAR_DISP_SCREEN;
+    clcd_print((const unsigned char*)"CLEARING",LINE1(4));
+    clcd_print((const unsigned char*)"THE LOGS",LINE2(4));
 
+    // reseting all tracking variables
+    write_index = 0;
+    write_flag = 0;
+
+    // saving resetted values to EEPROM
+    write_external_eeprom(WRITE_INDEX_ADDR,write_index);
+    write_external_eeprom(WRITE_FLAG_ADDR,write_flag);
+
+    __delay_ms(2000);
+
+    state = e_main_menu;
+    CLEAR_DISP_SCREEN;
 }
 
