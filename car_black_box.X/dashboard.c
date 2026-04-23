@@ -69,6 +69,18 @@ void update_time() {
         time[7] = ( seconds % 10 ) + '0';
 }
 
+void show_collision() {
+    CLEAR_DISP_SCREEN;
+    clcd_print((const unsigned char*)"COLLISION",LINE1(3));
+    clcd_print((const unsigned char*)"HAPPEN",LINE2(4));
+
+    while (1) {
+        unsigned char key = read_switches(STATE_CHANGE);
+        if ( key != ALL_RELEASED ) {
+            break;
+        }
+    }
+}
 
 void view_dashboard() {
     read_real_time_clock();
@@ -84,6 +96,12 @@ void view_dashboard() {
     } else if ( key == MK_SW1 && gear < 6 ) {
         gear+=1;
         save_log();
+    } else if ( key == MK_SW2 &&  gear > 0 ) {
+        gear-=1;
+        save_log();
+    } else if ( key == MK_SW3 ) {
+        show_collision();
+        gear = 0;
     }
 }
 
