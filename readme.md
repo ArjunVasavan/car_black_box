@@ -81,3 +81,4 @@ black_box.h         Shared defines, globals, function prototypes
 ## Build
 
 Open `car_black_box.X` in MPLAB X IDE with XC8 compiler. Set target device to PIC18F4580 at 20 MHz.
+
