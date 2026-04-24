@@ -30,6 +30,8 @@
 #define MINS_ADDR    3   // offset 3 → minutes
 #define SECS_ADDR    4   // offset 4 → seconds
 
+#define GEAR_COLLISION 7   // special value to mark collision event
+
 /* NOTE: Control Addresses
  * It is used to remember where it stopped write_index and is the EEPROM full
  */

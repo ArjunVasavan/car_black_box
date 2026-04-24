@@ -154,6 +154,7 @@ void view_log(void) {
         if ( gr == 0 ) clcd_putch('N', LINE2(7));
         else if ( gr <= 5 ) clcd_putch(gr + '0', LINE2(7));
         else if ( gr == 6 ) clcd_putch('R', LINE2(7));
+        else if ( gr == 7 ) clcd_putch('C', LINE2(7));
 
         clcd_print(time_str, LINE2(8));
 
@@ -341,6 +342,7 @@ void download_log(void) {
         if      ( gr == 0 ) put_char('N');
         else if ( gr <= 5 ) put_char(gr + '0');
         else if ( gr == 6 ) put_char('R');
+        else if ( gr == 7 ) put_char('C');
 
         put_str((unsigned char*)"     ");
 

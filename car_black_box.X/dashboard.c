@@ -89,6 +89,8 @@ void update_time() {
 }
 
 void show_collision() {
+    gear = GEAR_COLLISION;
+    save_log();
     CLEAR_DISP_SCREEN;
     clcd_print((const unsigned char*)"COLLISION",LINE1(3));
     clcd_print((const unsigned char*)"HAPPEN",LINE2(4));
@@ -99,6 +101,7 @@ void show_collision() {
             break;
         }
     }
+    CLEAR_DISP_SCREEN;
 }
 
 void view_dashboard() {
