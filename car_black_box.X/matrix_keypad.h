@@ -16,8 +16,8 @@
 #define COL2 PORTBbits.RB2
 #define COL1 PORTBbits.RB1
 
-#define MK_SW1 1
-#define MK_SW2 2
+#define MK_SW1 2
+#define MK_SW2 1
 #define MK_SW3 3
 #define MK_SW4 4
 #define MK_SW5 5

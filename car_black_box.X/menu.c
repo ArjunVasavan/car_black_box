@@ -5,6 +5,10 @@
 #include "uart.h"
 #include "ds1307.h"
 
+/* FIXME: CLEAR LOG
+ * when i press set time its clearing log
+ * on pressing set_time nothing is happening
+ */
 
 void display_main_menu(void) {
 

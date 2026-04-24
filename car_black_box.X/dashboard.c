@@ -10,7 +10,7 @@ static const char* gear_display[] = {"N","1","2","3","4","5","R"};
 
 static unsigned char line1[17] = " TIME    EV  SP ";
 static unsigned char time[9]   = "00:00:00";
-static unsigned char event[3]  = "ON";
+// static unsigned char event[3]  = "ON";
 static unsigned char speed[4]  = "00";
 
 void display_labels() {
