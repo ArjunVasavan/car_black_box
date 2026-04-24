@@ -11,7 +11,7 @@ static const char* gear_display[] = {"N","1","2","3","4","5","R"};
 static unsigned char line1[17] = " TIME    EV  SP ";
 static unsigned char time[9]   = "00:00:00";
 // static unsigned char event[3]  = "ON";
-static unsigned char speed[4]  = "00";
+static unsigned char speed[4]  = "000";
 
 void display_labels() {
     clcd_print(line1,LINE1(0));
@@ -102,26 +102,34 @@ void show_collision() {
 }
 
 void view_dashboard() {
+    static unsigned char first_entry = 1;
+
+    if ( first_entry ) {
+        first_entry = 0;
+        CLEAR_DISP_SCREEN;
+    }
+
     read_real_time_clock();
     read_speed_adc();
     update_time();
     display_labels();
-    clcd_print(time,   LINE2(0));   // col 0  → 00:00:00
-    clcd_print((const unsigned char*)gear_display[gear],LINE2(9));
-    clcd_print(speed,  LINE2(13));  // col 13 → under SP
+    clcd_print(time,   LINE2(0));
+    clcd_print((const unsigned char*)gear_display[gear], LINE2(10));
+    clcd_print(speed,  LINE2(13));
+
     unsigned char key = read_switches(STATE_CHANGE);
     if ( key == MK_SW11 ) {
+        first_entry = 1;   // reset so next entry clears screen
         CLEAR_DISP_SCREEN;
         state = e_main_menu;
     } else if ( key == MK_SW1 && gear < 6 ) {
-        gear+=1;
+        gear += 1;
         save_log();
-    } else if ( key == MK_SW2 &&  gear > 0 ) {
-        gear-=1;
+    } else if ( key == MK_SW2 && gear > 0 ) {
+        gear -= 1;
         save_log();
     } else if ( key == MK_SW3 ) {
         show_collision();
         gear = 0;
     }
 }
-
