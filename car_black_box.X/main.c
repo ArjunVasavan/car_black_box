@@ -73,7 +73,6 @@ int main(void) {
                 clear_log();
                 break;
 
-
             case e_set_time:
                 set_time();
                 break;
