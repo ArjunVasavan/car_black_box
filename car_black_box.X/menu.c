@@ -332,11 +332,11 @@ void download_log(void) {
 
         // send serial number
         put_str((unsigned char*)serial_no[count]);
-        put_str((unsigned char *)" ");
+        put_str((unsigned char*)"  ");
 
         //send speed
         put_str(spd_str);
-        put_str((unsigned char *)" ");
+        put_str((unsigned char*)"  ");
 
         // send gear
         if      ( gr == 0 ) put_char('N');
