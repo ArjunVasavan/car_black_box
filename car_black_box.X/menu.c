@@ -32,29 +32,13 @@ void display_main_menu(void) {
 
     if ( key == MK_SW1 && selected < 3 ) {
         selected += 1;
-        if ( selected > 0 ) {
-            menu_index = selected - 1;
-        } else {
-            menu_index = 0;
-        }
-        if ( selected % 2 == 0 ) {
-            cursor = 0;
-        } else {
-            cursor = 1;
-        }
+        menu_index = (selected > 0) ? selected - 1 : 0;
+        cursor     = (selected == 0) ? 0 : 1;
         CLEAR_DISP_SCREEN;
     } else if ( key == MK_SW2 && selected > 0 ) {
         selected -= 1;
-        if ( selected > 0 ) {
-            menu_index = selected - 1;
-        } else {
-            menu_index = 0;
-        }
-        if ( selected % 2 == 0 ) {
-            cursor = 0;
-        } else {
-            cursor = 1;
-        }
+        menu_index = (selected > 0) ? selected - 1 : 0;
+        cursor     = (selected == 0) ? 0 : 1;
         CLEAR_DISP_SCREEN;
     } else if ( key == MK_SW11 ) {
         first_entry = 1;
@@ -243,13 +227,13 @@ void set_time(void) {
             unsigned char bcd_min = ( ( min / 10 ) << 4 ) | ( min % 10 );
             unsigned char bcd_sec = ( ( sec / 10 ) << 4 ) | ( sec % 10 );
 
-           write_ds1307(HOUR_ADDR, bcd_hr); 
-           write_ds1307(MIN_ADDR,bcd_min); 
-           write_ds1307(SEC_ADDR,bcd_sec); 
+            write_ds1307(HOUR_ADDR, bcd_hr); 
+            write_ds1307(MIN_ADDR,bcd_min); 
+            write_ds1307(SEC_ADDR,bcd_sec); 
 
-           clcd_print((const unsigned char*)"TIME SAVED!", LINE1(3));
-           __delay_ms(2000);
-           break;
+            clcd_print((const unsigned char*)"TIME SAVED!", LINE1(3));
+            __delay_ms(2000);
+            break;
 
         }
 
